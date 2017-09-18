@@ -1,0 +1,106 @@
+custom-assets folder has Screenshot of Manual setting up of Angular application
+or use angular get started project by
+github.com/angular/quickstart
+(OR) Angular cli - for generating set of files and boilerplate code, generates modules, components, services and tests are included, and packages for deployment
+(OR) github.com/DeborahK/Angular-GettingStarted - APM-Start
+
+Angular CLI uses webpack - so all of ts files are listed in webpack node
+set a breakpoint in ts file
+
+npm start - runs 'ng' , ng executes the angular cli, string after ng is the cli command
+ng serve -o : runs the webserver and opens in browser
+
+angular cli - creates root component
+
+javascript namespaces - variables/func in global namespace
+use modules to resolve problems of namespaces
+angularjs has modules
+typescript has modules
+es2015 - a module is a file, a file is a module
+Angular: leverages es2015 modules, we create modules for apps, angular also has angular modules (diff impl of es2015)
+
+es2015 modules
+export and import
+export class Product{} - product.ts
+import { Product } from './product' - product-list.ts
+both above are modules
+
+when we compile the ts is transpiled into es2015 .js file
+
+angular modules helps for cohesive block of functionality (Components)
+each feature is a module
+shared/common module used by multiple module - to load on start or lazy load
+atleast one module, called @module
+each angular module we declare set of components associated with module
+
+custom-assets folder has Screenshots of ES Modules vs Angular modules
+
+Component: It is a combination of 
+    Templates (: View layout, using html, includes bindings and directives)
++   Class (associated code Properties and methods, using typescript)
++   Metadata (extra data, defined with a decorator, decorator: is a function that adds metadata to a class, its members or arguments)
+
+//this is an es module
+export class AppComponent {  -  feature is the class component name, AppComponent is the root component in general
+    pageTitle: string = 'Angular2 Product Management'
+}
+methods are defined after all properties in class
+
+Metadata: Component also has metadata which is defined with decorator. A decorator is a function that adds properties to the class (usually a TS function)
+is declared with @ symbol, we can create our own metadata as well.
+@Component is Angular component function
+declare the decorator above the class signature of the feature
+decorator is a function so (), and pass object using {}
+this syntax is similar to attributes
+@Component({ - @ to identify class as component
+    selector: 'pm-root', // to reference this component in any html, selector defines the components directive name
+    //whenever this directive is used in html, angular renders this components template
+    template: `
+        <h1>
+            {{pageTitle}}
+        </h1>
+    `
+})
+
+Importing: To use an external function we define where to use it, allows to use exported members from other modules
+import { Component } from '@angular/core' //component is the decarator used
+
+Bootstrapping:
+Tell angular to load root component through bootstrapping which includes:
+Setup index.html to host application
+define angular module to bootstrap root component
+
+index.html - one true webpage of app, hence SPA (insert bits of html into index.html)
+
+angular compiler knows custom html element (directive) 
+looks into angular module - 
+Angular Module:
+provides organization to achieve cohesive blocks of functionality
+Boundaries: boundaries within our app
+Template Resolution environment: 
+
+See Screenshot of AppModule arrows
+
+Angular Compiler sees a directive in a template it looks in angular module for the definition
+so we declare AppComponent in Angular Module so that the compiler can find it
+We also use the angular module to bootstrap our startup (root) component, in this case the app component
+Application should now work correctly in browser so import BrowserModule in this angularmodule imports
+
+Defining Angular module: Use @NgModule decorator to identify class as Angular Module and pass the metadata for the angular module
+properties include:
+declarations : which of components belong to this module, by convention the default AppComponent belongs to this module
+bootstrap: Startup component of application (AppComponent)
+imports: Define external modules that we want to be available for all of the components that belong to this angular module  (BrowserModule : every browser app should register)
+
+declarations: [
+    AppComponent
+  ]
+
+to tell where the selector is defined
+
+Final Checklist for component
+PascalCasing for component name
+
+Metadata defining for component is done using Decorator
+A class is not a component unless it has a Component Decorator
+selector: is not needed if component is not used in html
