@@ -35,7 +35,7 @@ each angular module we declare set of components associated with module
 
 custom-assets folder has Screenshots of ES Modules vs Angular modules
 
-Component: It is a combination of 
+Component: It is a combination of
     Templates (: View layout, using html, includes bindings and directives)
 +   Class (associated code Properties and methods, using typescript)
 +   Metadata (extra data, defined with a decorator, decorator: is a function that adds metadata to a class, its members or arguments)
@@ -72,12 +72,12 @@ define angular module to bootstrap root component
 
 index.html - one true webpage of app, hence SPA (insert bits of html into index.html)
 
-angular compiler knows custom html element (directive) 
-looks into angular module - 
+angular compiler knows custom html element (directive)
+looks into angular module -
 Angular Module:
 provides organization to achieve cohesive blocks of functionality
 Boundaries: boundaries within our app
-Template Resolution environment: 
+Template Resolution environment:
 
 See Screenshot of AppModule arrows
 
@@ -104,3 +104,172 @@ PascalCasing for component name
 Metadata defining for component is done using Decorator
 A class is not a component unless it has a Component Decorator
 selector: is not needed if component is not used in html
+
+inline template : ""
+es2015 template: ` `
+    disadvantages : no automatic formatting and syntax checking in tools
+Linked template: templateUrl: url of html file
+
+@Component({
+    selector: 'pm-products',
+    templateUrl: './product-list.component.html'
+})
+
+Adding components into another component
+Using Component as a directive
+we can include the (first) component template as directive into second (any) component template by using selector in the former component
+if there are 100s of components in the app,
+the app looks into angular module that owns this second component defined all of the directives that are visible to the second component
+
+every app has root module
+A component must belong to one angular module
+App module bootstraps app component and browser module (to run app in browser)
+
+so in this case declare the new first component in the old second components' angular module as below
+declarations: [
+    AppComponent,
+    ProductListComponent
+  ]
+
+  if the new component has its own module we can import the same similar to browser module
+
+  Binding: Coordinates comm between class and its template (values from class to template, template raises event back to class)
+  binding syntax is defined in the template
+
+  Intepolation: {{ }} : one way binding : class to template (pageTitle in app-component)
+  <h1>{{pageTitle}}</h1> === <h1 innerText={{pageTitle}}></h1>
+  pageTitle - template expression, angular evaluates based on the component in the context
+  other examples {{2*20+1}} , {{'Title' + getPageTitle()}}
+
+built-in directives : *ngIf, *ngFor,
+* - structural directive - modifies the structure or layout of a view by removing or adding elements and their children
+
+ngIf - false - the element and children are removed from DOM, if true - a copy of these are added to DOM
+
+BrowserModule exposes ngIf and ngFor directives, so any component declared by AppModule can use these two structural directives
+
+any[] : any datatype here array
+
+ngFor: repeats one for each item in a list
+syntax: *ngFor="let product of products"
+
+not using 'let product in products':
+es2015 for loops has both for-of and for-in looop,
+for-of is similar to forEach,
+for-in loops through the index of the properties
+
+<img [src]='product.imageUrl'> [src] is binding target, value in '' is binding source
+binding using Intepolation:
+<img src={{product.imageUrl}}>
+prefer property binding to interpolation except for a larger expression like 'https://google.com/q={{product.image}}'
+
+ex: <img [src]='product.imageUrl' [title]='product.productName'>
+and to set style of width and height, inject these properties in component properties and use property binding as below
+[style.width.px] = [image.width], [style.margin.px] = [image.margin]
+
+to perform two way databinding use ngModel as <input [(ngMode)]='listFilter'>
+[] = indicates property binding of class property to input element
+() = indicates event binding to send notification of user data to class property
+
+to initialize some value in textbox of listFilter, just specify a value for this property in component
+ngModel has to be imported in AppModel from 'FormsModel' library
+if 'FormsModel' is not imported then the below error on console
+"ngModel has to be imported in AppModel from 'FormsModel' library" and add 'FormsModel' in imports array of ngModule decorator
+In AppModule.ts
+imports array - has directies, components and pipes from other sources including Angular or 3rd parties
+declarations array - has our directives, components and pipes
+
+Formatting data - pipes - transform bound properties before they are displayed
+built in pipes - date , number, decimal, currency, json, slice - selects a specific elements from list
+Custom pipes
+{{product.productName | lowercase}}
+Multiple pipes : {{product.price | currency | lowercase}}
+Parameteric pipes: {{product.price | currency: 'USD' : true : '1.2-2' }}
+- true - to display symbol,
+1.2-2 - atleast 1 digit to the left of the decimal, atleast 2 digits to the right of the decimal and no more than 2 digits to right of decimal
+
+DATABINDING :
+DISPLAY CLASS PROPERTIES FROM COMPONENT
+set DOM element properties to  class property values
+component can listen for events from DOM
+
+Components: What constitutes for a good component
+Strong typing & Interface: helps minimize errors with better syntax checking and improved tooling
+If no predefined type for property: Define type using interface (like array of Products object which has its own properties and methods)
+Encapsulating styles: for components styles are declared inside a component so that they dont affect other components
+Lifecycle hooks: Component has a lifecycle managed by Angular. Angular provides lifecycle hooks to tap into key points in that lifecycle adding flexibility and responsiveness to our application
+Custom pipes
+Nested components
+
+Strong typing and Interface:
+In typescript every property has a type , every method has a return type, every method parameter has a type.
+In some cases, property or method doesnt have a predefined type such as below products array
+products: any[] = [
+        {
+            "productId": 1,
+            "productName": "Leaf Rake",
+            "productCode": "GDN-0011",
+            "releaseDate": "March 19, 2016",
+            "description": "Leaf rake with 48-inch wooden handle.",
+            "price": 19.95,
+            "starRating": 3.2,
+            "imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
+        }...
+]
+To specify custom types, we can define interface
+
+Interface: to declare a related set of methods and properties
+A class implements the interface for any business logic pertaining to the component using the interface properties
+This interface is then used as a datatype
+ES2015 doesnt support interfaces so transpiling doesnt show these in JS, and these interfaces are visbile only in dev.
+
+export Interface IProduct{
+    productId: number;
+    productName: string;
+    releaseDate: string;
+    calculateDiscount(percent: number): number;
+}
+the release date can be changed to date type if needed, in future by just changing here
+Import the interface and use the interface as datatype
+so just replace 'products: any[]' this with 'products: IProduct[]'
+
+Encapsulating Component styles:
+External stylesheets are good to use but linking them in index.html will put an extra burden in maintaining and also leaking of styles can occur
+Better way: Component decorator has properties to encapsulate styles as part of component definition using
+styles : using styles array property - ['thead {color: #2196f3}']
+styleUrls: using styleUrls pointing to external style sheets - ['./product-list-component.css'] - this is again array
+by doing this within the component, any defined style classes will apply to only the components template without any leaking
+
+Lifecycle: Managed by Angular
+Angular creates the component
+renders it
+creates and renders its children
+process changes for any change in data bounding properties
+destroys the component before removing from the template
+
+Hooks:
+OnInit: Component initialization, retrieve data for template from backend service
+OnChanges: Perform action after change to input properties
+OnDestroy: to perform clean up before destroys component
+
+implements OnInit - 'angular/core'
+
+ngOnInit(): void{
+
+}
+implementing the interface is optional as interfaces are features of typescript and not by es2015 but is a good practice to implement lifecycle hooks
+
+CustomPipe:
+Use @Pipe decorator to declare a name for pipe
+export a class that implements PipeTransform interface which has transform(),
+The syntax is similar to Creating Components
+
+now add it as <td>{{ product.productCode | lowercase | convertToSpaces: '-'}}</td>
+
+but angular cannot find where is convertToSpaces pipe, so the angular module of the component that wants to use this pipe
+should have the pipes declaration
+
+Filtering list based on ngmodel : databinding: by using pipe is no longer supported by Angular as the performance of such pipes is poor and prevent
+aggressive minification and all of this should be done in component
+
+

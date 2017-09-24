@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
     <div>
       <h1>{{pageTitle}}</h1>
       <div> Hello World Venkata's first Angular app (Component) </div>
+      <pm-products></pm-products>
     </div>
   `
 })
