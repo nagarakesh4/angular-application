@@ -311,3 +311,51 @@ We can think of @Input and @Output decorators as public api of the nestable comp
 
 Use Property Binding to pass data to the nested components
 Use Event binding to respond to events from the nested components
+
+Angular Service :
+
+Services and DI:
+Data/logic to be shared across components : Services
+functionality is Independent of any component
+
+In general a component can create an instance of service class and use it, it works . But the instance is local to the component and cannot share data,
+alternatively register the service with Angular
+
+Angular creates a single instance of this service class (Singleton). Angular provides built in injector which we register our services with and the
+injector maintains a container of created service instances. The injector creates and manages the single instance (singleton) of each registered service
+
+And then component class defines the service as a dependency, the angular injector injects service class instance when component class is instantiated - DI
+Any data/logic is shared by all classes that use it.
+
+Dependency Injection : pattern that class gets the dependencies it needs (object instances) from external source (Angular Injector) rather than creating in the class itself
+
+Good practice to add @Injectable() decorator to all services (unless the class has its own DI)
+
+Create the service (Class) - Similar to Custom pipes has Decorator and class methods
+Register with Angular Injector
+
+reuse the products service with all class to get list of products anywhere
+
+Register a service:
+Register a provider
+    register in component: Is available to the component and its children
+    root component : for to use throughout the application
+    register in Angular Module: Makes available through out the application
+
+add providers array property in @Component decorator (In root app component) so that angular injector can inject into any component that uses this root app component
+providers: [ ProductService ]
+
+now do dependency injection in class (Inside explicit constructor of component (is exec at compile time))
+
+constructor(private _productService: ProductService){
+}
+
+we get data of products/ anything from backend server so better not init products list in components but do it in Lifecycle hook : ngOnInit()
+remove all products initializations properties from the above constructor and move to ngOnInit()
+
+ngOnInit(): void{
+    this.products = this._productService.getProducts();
+    this.filteredProducts = this.products;
+}
+
+when instance of product list of component is created, the angular injector will injects the instance of productservice (singleton)

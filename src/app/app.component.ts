@@ -1,5 +1,6 @@
 //import component decorator from angular core to use in decorator
 import { Component } from '@angular/core';
+import { ProductService } from './products/products.service';
 
 //component decorator - Metadata
 @Component({
@@ -11,7 +12,8 @@ import { Component } from '@angular/core';
       <div> Hello World Venkata's first Angular app (Component) </div>
       <pm-products></pm-products>
     </div>
-  `
+  `,
+  providers: [ ProductService ]
 })
 
 //component class

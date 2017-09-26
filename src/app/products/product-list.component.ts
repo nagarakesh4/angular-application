@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { IProduct } from './iProduct'
+import { ProductService } from './products.service';
 
 @Component({
     selector: 'pm-products',
@@ -29,36 +30,19 @@ export class ProductListComponent implements OnInit{
     filteredProducts: IProduct[];
 
     //declare the products array
-    products: IProduct[] = [
-        {
-            "productId": 1,
-            "productName": "Leaf Rake",
-            "productCode": "GDN-0011",
-            "releaseDate": "March 19, 2016",
-            "description": "Leaf rake with 48-inch wooden handle.",
-            "price": 19.95,
-            "starRating": 3.2,
-            "imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
-        },
-        {
-            "productId": 2,
-            "productName": "Garden Cart",
-            "productCode": "GDN-0023",
-            "releaseDate": "March 18, 2016",
-            "description": "15 gallon capacity rolling garden cart",
-            "price": 32.99,
-            "starRating": 4.2,
-            "imageUrl": "http://openclipart.org/image/300px/svg_to_png/58471/garden_cart.png"
-        },
-    ];
+    products: IProduct[] = [];
 
     //all functions are under properties
     toggleImage(): void{
         this.showImage = !this.showImage;
     }
 
+    // is executed after the constructor
     ngOnInit(): void{
         console.log(" on initialization of this component - OnInit");
+        //retrieve data for template
+        this.products = this._productService.getProducts();
+        this.filteredProducts = this.products;
     }
 
     performFilter(filterBy: string): IProduct[] {
@@ -73,9 +57,8 @@ export class ProductListComponent implements OnInit{
     }
 
     //executed when component is first init before ngOnInit
-    constructor() {
-        console.log("constructor");
-        this.filteredProducts = this.products;
-        this.listFilter = 'cart';
+    constructor(private _productService: ProductService){ //can work with public and private as well
+        console.log("constructor with args");
+        //this.listFilter = 'cart'; 
     }
 }
