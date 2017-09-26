@@ -15,17 +15,14 @@ export class ProductListComponent implements OnInit{
     showImage: boolean = false;
     _listFilter: string;
 
-    //setters and getter for list filter
+    //setters and getter for list filter (ngModel two way data binding)
     get listFilter(): string{   //when the data binding needs the value
         return this._listFilter;
     }
     set listFilter(value: string){ //everytime user modifies the value, data binding calls the setter
         this._listFilter = value;
         //perform logic when the value is changed => filter the products
-        console.log(this.listFilter);
         this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
-        console.log(this.performFilter(this.listFilter));
-        console.log(this.filteredProducts);
     }
 
     //filtered list of products
@@ -65,14 +62,19 @@ export class ProductListComponent implements OnInit{
     }
 
     performFilter(filterBy: string): IProduct[] {
-        console.log("filteign by " + filterBy);
         filterBy = filterBy.toLocaleLowerCase();
         return this.products.filter((product: IProduct) =>
             product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1);
     }
 
-    //executed when component is first init
+    onRatingClicked(msg: string): void{
+        console.log(msg);
+        this.pageTitle = "Rating Selected: " + msg;
+    }
+
+    //executed when component is first init before ngOnInit
     constructor() {
+        console.log("constructor");
         this.filteredProducts = this.products;
         this.listFilter = 'cart';
     }

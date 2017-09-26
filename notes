@@ -272,4 +272,42 @@ should have the pipes declaration
 Filtering list based on ngmodel : databinding: by using pipe is no longer supported by Angular as the performance of such pipes is poor and prevent
 aggressive minification and all of this should be done in component
 
+Nested Components: Adding a component (Child component) inside another container (parent component). The @Input parameters are used to inject
+into child components and output is way to read from child components into parent component
 
+the stars width changes based on the rating selected, so the star component implements LifeCycle Hook: OnChanges (look for above definition)
+
+Nested Component:
+As a directive:
+specify the directive in main container and declare the StarComponent in AngularModule (The module that container that is using StarComponent is using)
+
+<td>{{ product.starRating }}</td> will be changed as
+<td><pm-star></pm-star></td>
+
+Passing data to nested components from container:
+
+If a nested component has to recieve inputs from its container it has to expose a property to that container
+nested component class should have @Input decorator.
+We use @Input To decorate any property in the nested components class to recieve input from its container
+
+@Input() rating: number; - will send rating property to the container so that container can provide the rating number
+
+in container, we use property binding and define nested components (child component) input property as the target of the binding using [] as:
+<pm-star [rating]='product.productRating'
+
+Anytime the container data changes, the OnChanges lifecycle event is generated and the property is recalculated
+
+@Output() - if nested component wants to send information back to the container, it can raise an event
+to decorate any property of nested component , however the property type must be an event
+data to pass becomes the even payload
+an event is defined with an event emitter object
+EventEmitter<string> = new EventEmitter<string>();
+
+container dom will have name of the event to listen for (from nested components)
+<td><pm-star [rating]='product.starRating' (ratingClicked)='onRatingClicked($event)'></pm-star></td>
+$event - to access payload from nested component
+
+We can think of @Input and @Output decorators as public api of the nestable components and everything else is encapsulated
+
+Use Property Binding to pass data to the nested components
+Use Event binding to respond to events from the nested components
