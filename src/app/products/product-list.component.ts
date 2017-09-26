@@ -15,6 +15,7 @@ export class ProductListComponent implements OnInit{
     imageMargin: number = 2;
     showImage: boolean = false;
     _listFilter: string;
+    errorMessage: string;
 
     //setters and getter for list filter (ngModel two way data binding)
     get listFilter(): string{   //when the data binding needs the value
@@ -40,9 +41,14 @@ export class ProductListComponent implements OnInit{
     // is executed after the constructor
     ngOnInit(): void{
         console.log(" on initialization of this component - OnInit");
-        //retrieve data for template
-        this.products = this._productService.getProducts();
-        this.filteredProducts = this.products;
+        //retrieve data for template and subscribe to returned observable
+        this._productService.getProducts()
+        .subscribe(
+        products => {
+            this.products = products;
+            this.filteredProducts = this.products;
+        },
+        error => this.errorMessage = <any>error); //<any> is casting operator to any
     }
 
     performFilter(filterBy: string): IProduct[] {
@@ -59,6 +65,6 @@ export class ProductListComponent implements OnInit{
     //executed when component is first init before ngOnInit
     constructor(private _productService: ProductService){ //can work with public and private as well
         console.log("constructor with args");
-        //this.listFilter = 'cart'; 
+        //this.listFilter = 'cart';
     }
 }

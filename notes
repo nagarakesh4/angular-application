@@ -359,3 +359,86 @@ ngOnInit(): void{
 }
 
 when instance of product list of component is created, the angular injector will injects the instance of productservice (singleton)
+
+Using HTTP with Observables to retrieve Data
+
+Observables helps manage async data
+Treats events as collections and array where data is arrived async
+Data comes in streamline
+are a feature of ES2016, can currently be supported with thirdpart library ReactiveExtensions (RxJS)
+events system, http clients service in angular are implemented with Observables
+
+Operators: Methods : to maninpulate data, donot wait for all of the values, process each value as they are available (map, filter)
+
+RxJS represent a data sequence as an Observable. A method in our code can subscribe to an observable to recieve async notifications when new data arrives
+map(x => x * 10) as data arrives x * 10 is computed
+
+marble diagram in screenshots - visualizing observable sequences (rxmarbles.com)
+
+async - promises
+promise returns future values
+observables - emits async values over time
+observables are lazy - they donot emit values until they are subscribed to, promises are not!
+promises are not cancellable they either resolve or reject, we can cancel observables at any time (see differences screenshot)
+
+we can use promises in angular as well
+
+Observables + HTTP -
+inject httpclient module service to app module (for all classes to use it)
+all third party modules go under import array and existing app modules go under declarations array
+imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule (common/http)
+]
+
+Update product service to use rest api call from webservice and inject httpClient as dependency in constructor
+
+the method to return products list should be of type Observable<IProducts[]> - the http is async operated and returns only single async value
+ (one element) which has http response object and maps to generic parameter IProducts[]
+
+private _getProductsApiURL = './api/products/products.json';
+
+constructor (private _httpClient: HttpClient){}
+
+getProducts(): Observable<IProduct[]>{
+    return this._httpClient.get<IProduct[]>(this._getProductsApiURL);
+}
+
+We need to subscribe to above observable before testing above
+
+Exception Handling:
+can be used with http... .do().catch()
+do : to handle data returned from server
+
+getProducts(): Observable<IProduct[]>{
+    return this._httpClient.get<IProduct[]>(this._getProductsApiURL)
+    .do( data => console.log('All: ' +  JSON.stringify(data)))
+    .catch(this.handleError);
+}
+
+Subscribing:
+x.then //Promise
+
+x.subscribe(valueFn, errorFn) //Observable - the valueFn is called for each value the observable emits
+x.subscribe(valueFn, errorFn, completeFn); //Observable - completeFn - to know on when the observable completed, it is executed on completion
+
+assign observable subscribe to any variable to later cancel the subscription
+let suc = x.subscribe(valueFn, errorFn, completeFn); - returns subscription
+
+this._productService.getProducts() //doesnt do anything as observable is lazy and have to be subscribed
+.subscribe( products => this.products = products, - action whenever observable emits an item
+error => this.errorMessage = ERROR);
+
+code:
+<ngOnInit(): void{
+        console.log(" on initialization of this component - OnInit");
+        //retrieve data for template and subscribe to returned observable
+        this._productService.getProducts()
+        .subscribe(
+        products => {
+            this.products = products;
+            this.filteredProducts = this.products;
+        },
+        error => this.errorMessage = <any>error); //<any> is casting operator to any
+}>
