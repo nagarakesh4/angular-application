@@ -442,3 +442,87 @@ code:
         },
         error => this.errorMessage = <any>error); //<any> is casting operator to any
 }>
+
+
+Angular CLI
+npm install -g @angular/cli
+ng g c <path_of_component> --flat
+g- generate
+c- component
+path_of_component - products/products-detail.component
+flat - no folder (else by default angular creates a new folder)
+
+Preventing Undefined properties on template:
+Safe navigation property - {{ product?.productName }} - displays only if Prodcut is not null
+the above is tedious to use for multiple elements/properties, instead use *ngIf
+
+The ts has selector generated in @Component
+selector: 'pm-product-detail', //will be needed only if this component is being nested into another component (and not route change)
+
+every time we create a component, we need it to declare the component in @Angular module
+
+Routing:
+Angular app is single page app (SPA), all of the views are displayed within one page (index.html)
+All views take turns to display on that one page based on routing
+
+activating (navigating) a route displays the corresponding components view
+
+routing is implemented with router directive - routerLink
+
+URLRewriting (#):
+
+By default angular uses html5 default style URLs which dont require # to indicate local navigation (unlike AngularJS)
+By using HTML5 style URLs we need to configure webserver to perform URLRewriting
+
+for # style routes, there is no need of URLRewriting
+
+when route changes, angular route looks for route definition
+route definition will have path and the corresponding component name to load when this route is activated
+the component will then load the template defined in @Component and it displays in built in router directive
+<router-outlet>
+
+1. Define route targets
+
+Register the router service in angular module (similar to httpclientmodule) - RouterModule
+ - registers router service provider
+ - delcares the router directives
+ - exposes the configured routes - ensuring routes are available before starting the app by passing routes to router module
+
+ RouterModule.forRoot([])
+ RouterModue.forRoot([], { useHash: true }) - to use hash
+
+ router configured with definitions:
+ { path: 'products', component: ProductListComponent }
+ /:id
+ default route:
+ { path: '', redirectTo: 'products', pathMatch: 'full'} - default route redirects to /products path
+ path match - we want the default route when the entire client side portion of the path is empty so we set path match to full
+ { path: '**", component: NOFOUND}  - wildcards if the url doesnt match any prior paths defined in this config file and uses the specified component
+ order of router matters - specific routes should be in prior
+
+ define a base element in head tag of html file
+ <base href="/">
+
+How does the router module know about configured routes
+RouterModule.forRoot([
+    { path: 'products', component: ProductListComponent},
+    { path: 'products/:id', component: ProductDetailComponent},
+])
+
+Ex:
+Because we do routing, the nested component attribute selector is removed for the corresponding component
+and instead routing is implemented as shown below:
+
+<li><a [routerLink]="['/welcome']">Home</a></li>
+When a route is activate by clicking on the above link, the associated components view is displayed here
+
+<div class="container">
+    <router-outlet></router-outlet>
+</div>
+
+How is this working
+navigation to routerlink, uses link parameter array to compose URL segment, browsers location is changed to app URL plus composed URL segment
+the router searches through valid route definition in app.module.ts and picks the first match (so order matters) and then loads
+the defined component view by creating an instance of component associated with that route and the view is injected in the
+router-outlet and the page is displayed
+
