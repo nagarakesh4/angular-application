@@ -645,3 +645,23 @@ imports: [
     CommonModule,
     FormsModule
 ]
+
+RoutingModule:
+Maintain a separate module for app routes, feature routes (product)
+ng g m app/app-routing --flat -m app.module
+
+In app.module while import app-routing module, import in specific order as shown below
+imports: [
+    BrowserModule,
+    HttpClientModule,
+    ProductModule,  //feature modules
+    AppRoutingModule // we declare approuting after product (or any module) - see notes
+],
+
+As stated in above comments always import Feature modules ahead of Application Routing modules because :
+This way if the feature module has a route module declared (product-route.module.ts) and has some routes configured they will not be overrriden by the AppRoutingModule which can have the wildcard routes/
+else feature routes will never be accessible
+
+
+Similarly create routing module for features
+ng g m products/product-routing --flat -m products/product.module
