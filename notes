@@ -556,3 +556,67 @@ constructor(private _route: Router) { }
 
 canActivate(route: ActivatedRouteSnapshot): boolean{
 }
+
+
+App Module:
+
+with @NgModule decorator (See screenshot The Angular Module)
+Every Component, Directive and Pipe we create belongs to angular module
+Bootstraps root application component to display first template
+export 3rd party libraries
+import other angular modules
+register service providesr
+routes : router module
+ngmodel : form module
+ngFor and ngIf : Browser module
+
+Bootstrap array
+Every application has a root application module and a root application component.
+the root application component is added to bootstrap array in root application module
+
+Declarations array:
+every commp, directive and pipe we create is declared by angular module and they belong to one and only one module - do not declare services, classes or modules
+all commp, directive and pipe are private, we share to other modules by exporting them
+
+Exports array:
+to share angular module commp, directive and pipe with other modules , rexport - system modules (form, http), own modules, 3rd party lib (material design)
+do not export a service , services are added to providers array of angular module are registered with root app inject making them available for injection for any class through out the application
+
+Imports array:
+to import supporting modules that export commp, directive and pipe
+Imports are not inherited
+importing a module doesnt provide access to its imported modules
+
+ex:
+
+if app module declares product list component and shared module declares and exports star component
+app modules imports the shared module so that shared modules exports are available to app module component templates in this case the star component directive is available to product list component
+if shared module imports forms modules then the forms modules exports are available to shared module, but the forms module exports cannot be available to app module
+Imports are not inherited! - from the above context
+if however shared module re-exports the forms module, then the forms module is available for app module as it now an export of shared module which is imported by app module!, and so the product list component could use the ngmodel directive from forms module
+
+module is a box and tree structure
+
+Providers array:
+angular module can also register service providers for apps, the providers array allow to register service provider at module level ~ providers array of component decorator that allows to register services at component level (Product Services)
+
+Product Guard Service - is registered at module level
+Product Service - is registered at component level
+is registered at the root of app - so any class can use else declare at component
+dont add service to shared module, instead register one time by a core common module for services and importing it once in the app module
+
+browsermodule should only be imported into root application module - AppModule
+so import commonmodule for ngFor and ngIf
+
+ng g m products/product --flat -m app.module
+g - generate
+m - module
+flat  - do not create folder
+-m - importing module name
+
+RouterModule.forChild - for the paths declared in individual component modules (products)
+RouterModule.forRoot - the paths declared in appmodule
+because we use RouterModule.forRoot in app module, the RouterModule registers the service provider
+but doesnt register the service again forChild
+
+formsModule cannot be imported in all modules, so we create a common module

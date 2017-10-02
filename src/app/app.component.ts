@@ -1,6 +1,5 @@
 //import component decorator from angular core to use in decorator
 import { Component } from '@angular/core';
-import { ProductService } from './products/products.service';
 
 //component decorator - Metadata
 @Component({
@@ -21,8 +20,7 @@ import { ProductService } from './products/products.service';
         <router-outlet></router-outlet>
       </div>
     </div>
-  `,
-  providers: [ ProductService ]
+  `
 })
 
 //component class
