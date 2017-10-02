@@ -526,3 +526,33 @@ the router searches through valid route definition in app.module.ts and picks th
 the defined component view by creating an instance of component associated with that route and the view is injected in the
 router-outlet and the page is displayed
 
+With Parameters:
+ActivatedRoute: from this._route.snapshot.paramMap.get('id');
+constructor(private _route: ActivatedRoute) { }
+to read the parameter from URL we use the ActivatedRoute service, by having instance of service (dependency)
+this._route.snapshot.paramMap.get('id'); - snapshot - to get initial value of parameter - user returns to list page before navigating to naother product
+through Observable - expect parameter to change without leaving page - ex: next button to display next product id
+
+let id = +this._route.snapshot.paramMap.get('id');
++ - to convert string to integer
+
+To route with service - we use router service
+this._router.navigate(['/products']);
+
+constructor(private _route: ActivatedRoute, private _router: Router) { }
+
+when the component class is constructed we get an instance of both activaterouteservice and router service
+
+protecting routes with guards
+
+GuardService implements CanActivate (or other guards)
+Create GuardService using cli as : ng g s products/prouduct-guard.service , s is the service
+by default angular cli wont register so mention -m app.module
+ActivatedRouteSnapshot - contains info of route at a moment
+add to implements func and in app.module on CanActivate
+
+Use route guards - to prevent access to a route, confirm navigation for a route, pre-load data to a route
+constructor(private _route: Router) { }
+
+canActivate(route: ActivatedRouteSnapshot): boolean{
+}

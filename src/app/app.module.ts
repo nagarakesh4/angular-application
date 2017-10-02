@@ -8,7 +8,8 @@ import { ConvertToSpacesPipe } from './shared/convert-to-space.pipe';
 import { StarComponent } from './shared/star.component';
 import { ProductDetailComponent } from './products/product-detail.component';
 import { WelcomeComponent } from './home/welcome.component';
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
+import { ProuductGuardService } from './products/prouduct-guard.service'
 
 @NgModule({
   declarations: [
@@ -25,13 +26,13 @@ import { RouterModule } from '@angular/router'
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'products', component: ProductListComponent },
-      { path: 'products/:id', component: ProductDetailComponent },
+      { path: 'products/:id', canActivate: [ProuductGuardService], component: ProductDetailComponent },
       { path: 'welcome', component: WelcomeComponent },
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
       { path: '**', redirectTo: 'welcome', pathMatch: 'full'} //usually a 404 page for wild cards
     ])
   ],
-  providers: [],
+  providers: [ ProuductGuardService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
