@@ -619,4 +619,29 @@ RouterModule.forRoot - the paths declared in appmodule
 because we use RouterModule.forRoot in app module, the RouterModule registers the service provider
 but doesnt register the service again forChild
 
-formsModule cannot be imported in all modules, so we create a common module
+formsModule and common module - we create a common module
+and each featuremodule can need a StarComponent
+
+Shared Module:
+reorganizing pieces
+comps, dir and pipes - to be shared throughout the app to be added in declarations array - star component
+import anything that shared comp needs - what star component needs - common module
+now export everything that other comp needs - star component, common module, forms module,
+in the above import and export notice that we didnt had to import forms module to export it
+
+create a module and import into product module - ng g m shared/shared --flat -m products/product.module
+
+whatever the module needs goes into - declarations array
+
+what ever we want to share has to be in exports array
+imports: [
+    CommonModule
+],
+  declarations: [
+    StarComponent
+],
+  exports: [
+    StarComponent,
+    CommonModule,
+    FormsModule
+]
